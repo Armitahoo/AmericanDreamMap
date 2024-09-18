@@ -1,13 +1,10 @@
-import geopandas as gpd
 import folium
-from folium import GeoJson
-from folium.features import GeoJsonTooltip
-from folium import Html
+import geopandas as gpd
 
-# Load world map data from geopandas
+# Load world geometries using GeoPandas
 world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
-# Customize your region groupings (including all countries in the world)
+# Define custom regions and their respective countries
 region_groups = {
     'North America': ['United States of America', 'Canada'],
     'Mexico and Central America': ['Mexico', 'Guatemala', 'Belize', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panama'],
@@ -30,17 +27,15 @@ region_groups = {
     'Pacific Islands': ['Micronesia', 'Palau', 'Marshall Islands', 'Kiribati', 'Tuvalu', 'Nauru']
 }
 
-# Add a column to map countries to regions
+# Assign regions to countries
 def get_region(country):
     for region, countries in region_groups.items():
         if country in countries:
             return region
-    return None  # All countries should now be mapped to a region
+    return 'Other'
 
+# Add region column to world dataframe
 world['region'] = world['name'].apply(get_region)
-
-# Create a folium map
-m = folium.Map(location=[20, 0], zoom_start=2)
 
 # Define hyperlinks for each region
 region_links = {
@@ -62,69 +57,70 @@ region_links = {
     'West Africa': 'https://example.com/west-africa',
     'East Africa': 'https://example.com/east-africa',
     'Caribbean': 'https://example.com/caribbean',
-    'Pacific Islands': 'https://example.com/pacific-islands'
+    'Pacific Islands': 'https://example.com/pacific-islands',
+    'Other': 'https://example.com/other'
 }
 
-# Function to create popups with clickable hyperlinks using Html
-def popup_html(region):
-    if region in region_links:
-        html = f'<a href="{region_links[region]}" target="_blank">{region}</a>'
-        return folium.Popup(folium.Html(html, script=True), max_width=300)
-    return folium.Popup('No link available')
+# Function to generate pop-up text with clickable hyperlink
+def popup_text(region):
+    link = region_links.get(region, 'https://example.com')
+    return f'<a href="{link}" target="_blank">{region} Information</a>'
 
-# Define colors for each region
+# Initialize a Folium map
+m = folium.Map(location=[20, 0], zoom_start=2)
+
+# Define a color map for the regions
 region_colors = {
-    'North America': '#f94144',
-    'Mexico and Central America': '#f3722c',
-    'South America': '#f8961e',
-    'West Europe': '#f9c74f',
-    'East Europe': '#90be6d',
-    'Russia': '#43aa8b',
-    'Central Asia': '#577590',
-    'MENA': '#277da1',
-    'North Africa': '#ffcc00',
-    'South Asia': '#4d908e',
-    'East Asia': '#577590',
-    'Southeast Asia': '#f9844a',
-    'Oceania': '#f3722c',
-    'Southern Africa': '#ff006e',
-    'Central Africa': '#9e0059',
-    'West Africa': '#bb3e03',
-    'East Africa': '#fb8500',
-    'Caribbean': '#023047',
-    'Pacific Islands': '#3a86ff'
+    'North America': 'blue',
+    'Mexico and Central America': 'green',
+    'South America': 'red',
+    'West Europe': 'purple',
+    'East Europe': 'orange',
+    'Russia': 'yellow',
+    'Central Asia': 'pink',
+    'MENA': 'lightblue',
+    'North Africa': 'darkgreen',
+    'South Asia': 'cyan',
+    'East Asia': 'magenta',
+    'Southeast Asia': 'teal',
+    'Oceania': 'lightgreen',
+    'Southern Africa': 'brown',
+    'Central Africa': 'gold',
+    'West Africa': 'violet',
+    'East Africa': 'silver',
+    'Caribbean': 'darkblue',
+    'Pacific Islands': 'lightyellow',
+    'Other': 'gray'
 }
 
-# Add GeoJson layers for each region
-for region, data in world.groupby('region'):
-    geojson = GeoJson(data,
-                      style_function=lambda feature, region=region: {
-                          'fillColor': region_colors.get(region, '#adb5bd'),  # Region-specific color
-                          'color': 'black',       # Black border for the region
-                          'weight': 2,            # Region border thickness
-                          'fillOpacity': 0.5      # Opacity of the region fill
-                      },
-                      highlight_function=lambda feature: {
-                          'fillColor': '#ffcccb',  # Highlight color when hovering over
-                          'color': 'black',
-                          'weight': 3,
-                          'fillOpacity': 0.7
-                      },
-                      tooltip=GeoJsonTooltip(fields=['region']),  # Tooltip shows the region name
-                      popup=popup_html(region))  # Add popup with clickable link
-    geojson.add_to(m)
+# Function to set the style for each region
+def style_function(feature):
+    region = feature['properties']['region']
+    return {
+        'fillOpacity': 0.7,
+        'weight': 1,
+        'color': 'black',
+        'fillColor': region_colors.get(region, 'gray')
+    }
 
-# Add a GeoJson layer for the entire world but with invisible borders
-GeoJson(world, style_function=lambda x: {
-    'fillOpacity': 0,  # Transparent countries
-    'color': 'transparent'  # Invisible borders for individual countries
-}).add_to(m)
+# Function to highlight a region on hover
+def highlight_function(feature):
+    return {
+        'weight': 3,
+        'color': 'blue',
+        'fillOpacity': 0.9
+    }
 
-# Save the map
-m.save("interactive_map.html")
+# Add a GeoJson layer to the map
+folium.GeoJson(
+    world,
+    style_function=style_function,
+    highlight_function=highlight_function,
+    tooltip=folium.GeoJsonTooltip(fields=['name', 'region'], aliases=['Country:', 'Region:']),
+    popup=folium.GeoJsonPopup(fields=['region'], aliases=['Region:'], labels=True,
+                              style="background-color: white;", localize=True,
+                              sticky=False),
+).add_to(m)
 
-# To display in Jupyter notebook use: 
-# from IPython.display import display
-# display(m)
-# Display the country names to ensure they match your region_groups
-print(world['name'].unique())
+# Save the map to an HTML file
+m.save('interactive_world_map.html')
