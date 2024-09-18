@@ -1,0 +1,35 @@
+import geopandas as gpd
+import folium
+from folium import GeoJson
+
+# Load world map data from geopandas
+world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+
+# Customize your region groupings (e.g., MENA, South Asia, etc.)
+# You may need to map these manually to specific countries.
+region_groups = {
+    'North America': ['United States', 'Canada'],
+    'Mexico and Central America': ['Mexico', 'Guatemala', 'Belize', 'El Salvador'],
+    'South America': ['Brazil', 'Argentina', 'Chile'],
+    'West Europe': ['France', 'Germany', 'Spain'],
+    'East Europe': ['Poland', 'Ukraine', 'Romania'],
+    'Russia': ['Russia'],
+    'Central Asia': ['Kazakhstan', 'Uzbekistan', 'Turkmenistan'],
+    'MENA': ['Egypt', 'Iran', 'Saudi Arabia'],
+    'South Asia': ['India', 'Pakistan', 'Bangladesh'],
+    'East Asia': ['China', 'Japan', 'Korea'],
+    'Oceania': ['Australia', 'New Zealand'],
+    'Southern Africa': ['South Africa', 'Namibia', 'Botswana']
+}
+
+# Add a column to map countries to regions
+def get_region(country):
+    for region, countries in region_groups.items():
+        if country in countries:
+            return region
+    return None
+
+world['region'] = world['name'].apply(get_region)
+
+# Filter to only include countries from the specified regions
+world_filtered = world[world['region'].notnull()]
