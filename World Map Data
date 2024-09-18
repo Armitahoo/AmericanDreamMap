@@ -1,25 +1,33 @@
 import geopandas as gpd
 import folium
 from folium import GeoJson
+from folium.features import GeoJsonTooltip
+from folium import Html
 
 # Load world map data from geopandas
 world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
-# Customize your region groupings (e.g., MENA, South Asia, etc.)
-# You may need to map these manually to specific countries.
+# Customize your region groupings (including all countries in the world)
 region_groups = {
-    'North America': ['United States', 'Canada'],
-    'Mexico and Central America': ['Mexico', 'Guatemala', 'Belize', 'El Salvador'],
-    'South America': ['Brazil', 'Argentina', 'Chile'],
-    'West Europe': ['France', 'Germany', 'Spain'],
-    'East Europe': ['Poland', 'Ukraine', 'Romania'],
+    'North America': ['United States of America', 'Canada'],
+    'Mexico and Central America': ['Mexico', 'Guatemala', 'Belize', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panama'],
+    'South America': ['Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru', 'Venezuela', 'Ecuador', 'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname'],
+    'West Europe': ['France', 'Germany', 'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Italy', 'United Kingdom'],
+    'East Europe': ['Poland', 'Ukraine', 'Romania', 'Hungary', 'Czech Republic', 'Slovakia', 'Bulgaria', 'Serbia', 'Croatia', 'Bosnia and Herzegovina', 'Moldova', 'Turkey'],
     'Russia': ['Russia'],
-    'Central Asia': ['Kazakhstan', 'Uzbekistan', 'Turkmenistan'],
-    'MENA': ['Egypt', 'Iran', 'Saudi Arabia'],
-    'South Asia': ['India', 'Pakistan', 'Bangladesh'],
-    'East Asia': ['China', 'Japan', 'Korea'],
-    'Oceania': ['Australia', 'New Zealand'],
-    'Southern Africa': ['South Africa', 'Namibia', 'Botswana']
+    'Central Asia': ['Kazakhstan', 'Uzbekistan', 'Turkmenistan', 'Tajikistan', 'Kyrgyzstan'],
+    'MENA': ['Saudi Arabia', 'Iran', 'Iraq', 'Jordan', 'Syria', 'Lebanon', 'Israel', 'Palestine', 'Kuwait', 'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen'],
+    'North Africa': ['Egypt', 'Libya', 'Algeria', 'Morocco', 'Tunisia', 'Sudan', 'Western Sahara', 'Mauritania'],
+    'South Asia': ['India', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Bhutan', 'Maldives', 'Afghanistan'],
+    'East Asia': ['China', 'Japan', 'South Korea', 'Mongolia', 'North Korea'],
+    'Southeast Asia': ['Indonesia', 'Thailand', 'Vietnam', 'Malaysia', 'Singapore', 'Philippines', 'Myanmar', 'Cambodia', 'Laos', 'Brunei', 'Timor-Leste'],
+    'Oceania': ['Australia', 'New Zealand', 'Papua New Guinea', 'Fiji', 'Solomon Islands', 'Vanuatu', 'Samoa', 'Tonga'],
+    'Southern Africa': ['South Africa', 'Namibia', 'Botswana', 'Zimbabwe', 'Zambia', 'Angola', 'Malawi', 'Mozambique', 'Lesotho', 'eSwatini'],
+    'Central Africa': ['Dem. Rep. Congo', 'Republic of the Congo', 'Cameroon', 'Gabon', 'Eq. Guinea', 'Central African Rep.', 'Chad'],
+    'West Africa': ['Nigeria', 'Ghana', "Côte d'Ivoire", 'Senegal', 'Mali', 'Guinea', 'Sierra Leone', 'Liberia', 'Burkina Faso', 'Togo', 'Benin', 'Niger', 'Cape Verde', 'Gambia', 'Guinea-Bissau', 'Mauritania'],
+    'East Africa': ['Kenya', 'Tanzania', 'Uganda', 'Ethiopia', 'Somalia', 'Rwanda', 'Burundi', 'Djibouti', 'Eritrea', 'South Sudan', 'Madagascar', 'Seychelles', 'Comoros', 'Mauritius'],
+    'Caribbean': ['Cuba', 'Haiti', 'Dominican Republic', 'Jamaica', 'Trinidad and Tobago', 'Barbados', 'Bahamas', 'Saint Lucia', 'Grenada', 'Saint Vincent and the Grenadines', 'Antigua and Barbuda', 'Saint Kitts and Nevis', 'Dominica'],
+    'Pacific Islands': ['Micronesia', 'Palau', 'Marshall Islands', 'Kiribati', 'Tuvalu', 'Nauru']
 }
 
 # Add a column to map countries to regions
@@ -27,9 +35,96 @@ def get_region(country):
     for region, countries in region_groups.items():
         if country in countries:
             return region
-    return None
+    return None  # All countries should now be mapped to a region
 
 world['region'] = world['name'].apply(get_region)
 
-# Filter to only include countries from the specified regions
-world_filtered = world[world['region'].notnull()]
+# Create a folium map
+m = folium.Map(location=[20, 0], zoom_start=2)
+
+# Define hyperlinks for each region
+region_links = {
+    'North America': 'https://example.com/north-america',
+    'Mexico and Central America': 'https://example.com/mexico-central-america',
+    'South America': 'https://example.com/south-america',
+    'West Europe': 'https://example.com/west-europe',
+    'East Europe': 'https://example.com/east-europe',
+    'Russia': 'https://example.com/russia',
+    'Central Asia': 'https://example.com/central-asia',
+    'MENA': 'https://example.com/mena',
+    'North Africa': 'https://example.com/north-africa',
+    'South Asia': 'https://example.com/south-asia',
+    'East Asia': 'https://example.com/east-asia',
+    'Southeast Asia': 'https://example.com/southeast-asia',
+    'Oceania': 'https://example.com/oceania',
+    'Southern Africa': 'https://example.com/southern-africa',
+    'Central Africa': 'https://example.com/central-africa',
+    'West Africa': 'https://example.com/west-africa',
+    'East Africa': 'https://example.com/east-africa',
+    'Caribbean': 'https://example.com/caribbean',
+    'Pacific Islands': 'https://example.com/pacific-islands'
+}
+
+# Function to create popups with clickable hyperlinks using Html
+def popup_html(region):
+    if region in region_links:
+        html = f'<a href="{region_links[region]}" target="_blank">{region}</a>'
+        return folium.Popup(folium.Html(html, script=True), max_width=300)
+    return folium.Popup('No link available')
+
+# Define colors for each region
+region_colors = {
+    'North America': '#f94144',
+    'Mexico and Central America': '#f3722c',
+    'South America': '#f8961e',
+    'West Europe': '#f9c74f',
+    'East Europe': '#90be6d',
+    'Russia': '#43aa8b',
+    'Central Asia': '#577590',
+    'MENA': '#277da1',
+    'North Africa': '#ffcc00',
+    'South Asia': '#4d908e',
+    'East Asia': '#577590',
+    'Southeast Asia': '#f9844a',
+    'Oceania': '#f3722c',
+    'Southern Africa': '#ff006e',
+    'Central Africa': '#9e0059',
+    'West Africa': '#bb3e03',
+    'East Africa': '#fb8500',
+    'Caribbean': '#023047',
+    'Pacific Islands': '#3a86ff'
+}
+
+# Add GeoJson layers for each region
+for region, data in world.groupby('region'):
+    geojson = GeoJson(data,
+                      style_function=lambda feature, region=region: {
+                          'fillColor': region_colors.get(region, '#adb5bd'),  # Region-specific color
+                          'color': 'black',       # Black border for the region
+                          'weight': 2,            # Region border thickness
+                          'fillOpacity': 0.5      # Opacity of the region fill
+                      },
+                      highlight_function=lambda feature: {
+                          'fillColor': '#ffcccb',  # Highlight color when hovering over
+                          'color': 'black',
+                          'weight': 3,
+                          'fillOpacity': 0.7
+                      },
+                      tooltip=GeoJsonTooltip(fields=['region']),  # Tooltip shows the region name
+                      popup=popup_html(region))  # Add popup with clickable link
+    geojson.add_to(m)
+
+# Add a GeoJson layer for the entire world but with invisible borders
+GeoJson(world, style_function=lambda x: {
+    'fillOpacity': 0,  # Transparent countries
+    'color': 'transparent'  # Invisible borders for individual countries
+}).add_to(m)
+
+# Save the map
+m.save("interactive_map.html")
+
+# To display in Jupyter notebook use: 
+# from IPython.display import display
+# display(m)
+# Display the country names to ensure they match your region_groups
+print(world['name'].unique())
