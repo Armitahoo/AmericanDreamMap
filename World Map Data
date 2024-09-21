@@ -11,19 +11,14 @@ region_groups = {
     'South America': ['Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru', 'Venezuela', 'Ecuador', 'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname'],
     'West Europe': ['France', 'Germany', 'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Italy', 'United Kingdom'],
     'East Europe': ['Poland', 'Ukraine', 'Romania', 'Hungary', 'Czech Republic', 'Slovakia', 'Bulgaria', 'Serbia', 'Croatia', 'Bosnia and Herzegovina', 'Moldova', 'Turkey'],
-    'Russia': ['Russia'],
     'Central Asia': ['Kazakhstan', 'Uzbekistan', 'Turkmenistan', 'Tajikistan', 'Kyrgyzstan'],
     'MENA': ['Saudi Arabia', 'Iran', 'Iraq', 'Jordan', 'Syria', 'Lebanon', 'Israel', 'Palestine', 'Kuwait', 'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Egypt', 'Libya', 'Algeria', 'Morocco', 'Tunisia', 'Sudan', 'Western Sahara', 'Mauritania'],
     'South Asia': ['India', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Bhutan', 'Maldives', 'Afghanistan'],
     'East Asia': ['China', 'Japan', 'South Korea', 'Mongolia', 'North Korea'],
     'Southeast Asia': ['Indonesia', 'Thailand', 'Vietnam', 'Malaysia', 'Singapore', 'Philippines', 'Myanmar', 'Cambodia', 'Laos', 'Brunei', 'Timor-Leste'],
     'Oceania': ['Australia', 'New Zealand', 'Papua New Guinea', 'Fiji', 'Solomon Islands', 'Vanuatu', 'Samoa', 'Tonga'],
-    'Southern Africa': ['South Africa', 'Namibia', 'Botswana', 'Zimbabwe', 'Zambia', 'Angola', 'Malawi', 'Mozambique', 'Lesotho', 'eSwatini'],
-    'Central Africa': ['Dem. Rep. Congo', 'Republic of the Congo', 'Cameroon', 'Gabon', 'Eq. Guinea', 'Central African Rep.', 'Chad'],
-    'West Africa': ['Nigeria', 'Ghana', "Côte d'Ivoire", 'Senegal', 'Mali', 'Guinea', 'Sierra Leone', 'Liberia', 'Burkina Faso', 'Togo', 'Benin', 'Niger', 'Cape Verde', 'Gambia', 'Guinea-Bissau', 'Mauritania'],
-    'East Africa': ['Kenya', 'Tanzania', 'Uganda', 'Ethiopia', 'Somalia', 'Rwanda', 'Burundi', 'Djibouti', 'Eritrea', 'South Sudan', 'Madagascar', 'Seychelles', 'Comoros', 'Mauritius'],
-    'Caribbean': ['Cuba', 'Haiti', 'Dominican Republic', 'Jamaica', 'Trinidad and Tobago', 'Barbados', 'Bahamas', 'Saint Lucia', 'Grenada', 'Saint Vincent and the Grenadines', 'Antigua and Barbuda', 'Saint Kitts and Nevis', 'Dominica'],
-    'Pacific Islands': ['Micronesia', 'Palau', 'Marshall Islands', 'Kiribati', 'Tuvalu', 'Nauru']
+    'Southern Africa': ['Nigeria', 'Ghana', "Côte d'Ivoire", 'Senegal', 'Mali', 'Guinea', 'Sierra Leone', 'Liberia', 'Burkina Faso', 'Togo', 'Benin', 'Niger', 'Cape Verde', 'Gambia', 'Guinea-Bissau', 'Mauritania', 'South Africa', 'Namibia', 'Botswana', 'Zimbabwe', 'Zambia', 'Angola', 'Malawi', 'Mozambique', 'Lesotho', 'eSwatini', 'Kenya', 'Tanzania', 'Uganda', 'Ethiopia', 'Somalia', 'Rwanda', 'Burundi', 'Djibouti', 'Eritrea', 'South Sudan', 'Madagascar', 'Seychelles', 'Comoros', 'Mauritius', 'Dem. Rep. Congo', 'Republic of the Congo', 'Cameroon', 'Gabon', 'Eq. Guinea', 'Central African Rep.', 'Chad'],
+    'Caribbean': ['Cuba', 'Haiti', 'Dominican Republic', 'Jamaica', 'Trinidad and Tobago', 'Barbados', 'Bahamas', 'Saint Lucia', 'Grenada', 'Saint Vincent and the Grenadines', 'Antigua and Barbuda', 'Saint Kitts and Nevis', 'Dominica']
 }
 
 # Assign regions to countries
