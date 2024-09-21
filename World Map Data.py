@@ -9,7 +9,7 @@ region_groups = {
     'North America': ['United States of America', 'Canada'],
     'Mexico and Central America': ['Mexico', 'Guatemala', 'Belize', 'El Salvador', 'Honduras', 'Nicaragua', 'Costa Rica', 'Panama'],
     'South America': ['Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru', 'Venezuela', 'Ecuador', 'Bolivia', 'Paraguay', 'Uruguay', 'Guyana', 'Suriname'],
-    'West Europe': ["Ireland", 'Denmark', 'Norway', 'Sweden', 'Finland', 'France', 'Germany', 'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Italy', 'United Kingdom'],
+    'West Europe': ["Ireland", 'Iceland', 'Denmark', 'Norway', 'Sweden', 'Finland', 'France', 'Germany', 'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Italy', 'United Kingdom'],
     'East Europe': ['Poland', 'Ukraine', 'Romania', 'Hungary', 'Czech Republic', 'Slovakia', 'Bulgaria', 'Serbia', 'Croatia', 'Bosnia and Herzegovina', 'Moldova', 'Turkey', 'Greece', 'Albania', 'North Macedonia', 'Kosovo', 'Montenegro', 'Bosnia and Herz.', 'Slovenia', 'Czechia', 'Belarus', 'Lithuania', 'Latvia', 'Estonia', 'Cyprus', 'N. Cyprus'],
     'Central Asia': ['Kazakhstan', 'Uzbekistan', 'Turkmenistan', 'Tajikistan', 'Kyrgyzstan'],
     'MENA': ['Saudi Arabia', 'Iran', 'Iraq', 'Jordan', 'Syria', 'Lebanon', 'Israel', 'Palestine', 'Kuwait', 'Bahrain', 'Qatar', 'United Arab Emirates', 'Oman', 'Yemen', 'Egypt', 'Libya', 'Algeria', 'Morocco', 'Tunisia', 'Sudan', 'W. Sahara', 'Mauritania', "S. Sudan", 'Somaliland'],
